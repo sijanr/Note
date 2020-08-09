@@ -1,0 +1,12 @@
+package dev.sijanrijal.note.ui
+
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import dev.sijanrijal.note.R
+
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+    }
+}
