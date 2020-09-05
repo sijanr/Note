@@ -33,8 +33,7 @@ class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.NoteListViewHolder>
 
         fun setData(position: Int) {
             binding.apply {
-                notesTitle.text = list[position].title
-                notesTimestamp.text = list[position].timeStamp
+
             }
         }
     }
