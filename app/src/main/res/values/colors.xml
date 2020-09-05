@@ -1,14 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="green_50">#EDFBE8</color>
+    <color name="green_100">#D2F4C6</color>
+    <color name="green_220">#B4ECA1</color>
+    <color name="green_300">#92E479</color>
+    <color name="green_400">#75DD57</color>
+    <color name="green_500">#57D634</color>
+    <color name="green_600">#46C52C</color>
+    <color name="green_700">#28B021</color>
+    <color name="green_800">#009C15</color>
+    <color name="green_900">#007900</color>
 
-    <color name="lightYellow">#ffffb3</color>
-    <color name="mediumYellow">#ffdf80</color>
-    <color name="darkYellow">#ffd24d</color>
-    <color name="lightGrey">#d9d9d9</color>
-    <color name="darkGrey">#a2a2a2</color>
-    <color name="black">#000</color>
-    <color name="white">#fff</color>
+    <color name="yellow_50">#F9FBE7</color>
+    <color name="yellow_100">#F2F4C4</color>
+    <color name="yellow_200">#E9EC9D</color>
+    <color name="yellow_300">#E2E479</color>
+    <color name="yellow_400">#DEDF5E</color>
+    <color name="yellow_500">#D9DA46</color>
+    <color name="yellow_600">#D8C93F</color>
+    <color name="yellow_700">#D6B334</color>
+    <color name="yellow_800">#D29C29</color>
+    <color name="yellow_900">#D29C29</color>
+
+    <color name="colorOnPrimary">@android:color/black</color>
+    <color name="colorOnSecondary">@android:color/black</color>
+
+
 </resources>
