@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Note</string>
+    <string name="email_label">Email</string>
+    <string name="password_label">Password</string>
+    <string name="log_in_label">Log in</string>
+    <string name="sign_up_label">Sign Up</string>
+    <string name="sign_up_with_email_label">Sign up with email</string>
+    <string name="sign_up_login_header">Need an account? No problem</string>
+    <string name="note_logo_image_description">Note Logo</string>
+    <string name="first_name_label">First Name</string>
+    <string name="last_name_label">Last Name</string>
 </resources>
