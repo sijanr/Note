@@ -41,7 +41,7 @@ class LoginFragment : Fragment() {
                 binding.passwordTextInput.editText?.text.toString())
         }
 
-        viewModel.isSignInSuccessful.observe(this, Observer { isSignInSuccessful ->
+        viewModel.isSignInSuccessful.observe(viewLifecycleOwner, Observer { isSignInSuccessful ->
             if (isSignInSuccessful) {
                 if(viewModel.isNewUser) {
                     findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToFirstSignInFragment())

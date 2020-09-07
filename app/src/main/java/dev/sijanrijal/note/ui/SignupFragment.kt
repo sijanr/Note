@@ -34,7 +34,7 @@ class SignupFragment : Fragment() {
         }
 
         //listen to whether signup was successful or not
-        viewModel.isSignUpSuccessful.observe(this, Observer { isSignUpSuccessful ->
+        viewModel.isSignUpSuccessful.observe(viewLifecycleOwner, Observer { isSignUpSuccessful ->
             if(isSignUpSuccessful) {
                 makeToast("Signup successful. Verify your email before you login")
                 findNavController().navigate(SignupFragmentDirections.actionSignupFragmentToLoginFragment())

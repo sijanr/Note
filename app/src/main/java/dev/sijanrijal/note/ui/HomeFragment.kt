@@ -58,7 +58,7 @@ class HomeFragment : Fragment() {
             }
         })
 
-        viewModel.isDatabaseReady.observe(this, Observer { isDatabaseReady ->
+        viewModel.isDatabaseReady.observe(viewLifecycleOwner, Observer { isDatabaseReady ->
             if(isDatabaseReady) {
                 val userName = FirebaseAuth.getInstance().currentUser!!.displayName?.substringBefore(" ") ?: " "
                 adapter.addHeaderAndNoteList(viewModel.notesList, userName)

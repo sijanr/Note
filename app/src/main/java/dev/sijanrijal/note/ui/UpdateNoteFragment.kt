@@ -45,7 +45,7 @@ class UpdateNoteFragment  : Fragment() {
             }
         }
 
-        viewModel.isSuccessful.observe(this, Observer {
+        viewModel.isSuccessful.observe(viewLifecycleOwner, Observer {
             if(it) {
                 findNavController().navigate(UpdateNoteFragmentDirections.actionUpdateNoteFragmentToHomeFragment())
             } else {
