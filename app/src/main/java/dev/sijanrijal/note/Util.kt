@@ -1,5 +1,8 @@
 package dev.sijanrijal.note
 
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 private const val PASSWORD_MIN_LENGTH = 10
 const val VERIFY_MESSAGE_ERROR = "Failed to verify email"
@@ -23,4 +26,9 @@ fun checkUserName(firstName : String?, lastName: String?) : Boolean {
     return((firstNameCheck.isNotEmpty()) && (lastNameCheck.isNotEmpty())
         && (firstNameLength == firstNameCheck.length) && (lastNameCheck.length == lastNameLength))
 
+}
+
+fun Date.toString(format: String, locale : Locale = Locale.getDefault()) : String {
+    val formatter = SimpleDateFormat(format, locale)
+    return formatter.format(this)
 }
