@@ -25,4 +25,9 @@ jobs:
         java-version: 1.8
     - name: Build with Gradle
       run: ./gradlew build 
+    - name: Upload APK
+      uses: actions/upload-artifact@v2
+      with:
+        name: Note
+        path: apk/Note.apk
     
