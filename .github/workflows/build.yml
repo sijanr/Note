@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Decrypt Firebase Config
+      run: echo $FIREBASE_SERVICE
       env:
         FIREBASE_SERVICE: ${{secrets.FIREBASE_SERVICE}}
-      run: cat "$FIREBASE_SERVICE"
     
