@@ -22,6 +22,11 @@ class LoginFragmentViewModel : ViewModel() {
 
     var isNewUser = false
 
+
+    /**
+     * Checks for errors in user's email and password and notifies the UI whether the authentication
+     * was successful or not
+     * **/
     fun onLoginButtonClicked(email: String?, password: String?) {
         if (checkEmailPasswordValidity(email, password)) {
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email!!, password!!)
@@ -40,6 +45,10 @@ class LoginFragmentViewModel : ViewModel() {
     }
 
 
+    /**
+     * Checks whether the user is a registered user and if so, performs an additional check to
+     * verify if the user has verfied the registered email
+     * **/
     fun setupFirebaseAuthListener() {
         mAuthListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
             val user = firebaseAuth.currentUser

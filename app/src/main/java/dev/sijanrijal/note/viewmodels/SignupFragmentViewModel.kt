@@ -20,6 +20,11 @@ class SignupFragmentViewModel : ViewModel() {
 
     var errorMessage = ""
 
+    /**
+     * Authenticate a new user sign up process and if the authentication is successful, send a
+     * verification email to the user. If there was an issue validating user's email or password
+     * display the error message
+     * **/
     fun onSignUpClicked(email : String?, password : String?) {
         if(checkEmailPasswordValidity(email, password)) {
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email!!, password!!)
@@ -40,6 +45,9 @@ class SignupFragmentViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Send a verification email to the new registered user
+     * **/
     private fun sendVerificationEmail() {
         val firebaseUser = FirebaseAuth.getInstance().currentUser
         firebaseUser?.let { user ->

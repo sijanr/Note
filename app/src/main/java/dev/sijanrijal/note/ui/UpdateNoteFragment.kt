@@ -25,6 +25,7 @@ class UpdateNoteFragment  : Fragment() {
         binding = FragmentAddNoteBinding.inflate(
             inflater, container, false)
 
+        //get an argument from the bundle if the user is trying to update the note
         val argument =  UpdateNoteFragmentArgs.fromBundle(requireArguments())
         var isUpdate = false
         if(argument.noteTitle.isNotEmpty() && argument.description.isNotEmpty()) {
@@ -33,18 +34,26 @@ class UpdateNoteFragment  : Fragment() {
             isUpdate = true
         }
 
+        //update/create a note in the firestore database
         binding.fab.setOnClickListener {
             val title = binding.editTextTitle.text.toString().trim()
             val description = binding.description.text.toString().trim()
+
+            //create a new note
             if(!isUpdate) {
                 viewModel.addNote(Note(note_title = title,
                     description = description))
-            } else {
+            }
+
+            //update an existing note
+            else {
                 viewModel.updateNote(argument.noteTitle, argument.description, argument.createdDate, argument.noteId,
                     Note(note_title = title, created_date = argument.createdDate, description = description))
             }
         }
 
+        //if the note was added/updated successfuly, take the user to the home fragment to see the
+        //list of user's notes
         viewModel.isSuccessful.observe(viewLifecycleOwner, Observer {
             if(it) {
                 findNavController().navigate(UpdateNoteFragmentDirections.actionUpdateNoteFragmentToHomeFragment())

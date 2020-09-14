@@ -33,7 +33,8 @@ class SignupFragment : Fragment() {
             onSignUpSelected()
         }
 
-        //listen to whether signup was successful or not
+        //listen to whether the signup process was successful or not
+        // if it was successful navigate the user to the login screen
         viewModel.isSignUpSuccessful.observe(viewLifecycleOwner, Observer { isSignUpSuccessful ->
             if(isSignUpSuccessful) {
                 makeToast("Signup successful. Verify your email before you login")
@@ -48,6 +49,9 @@ class SignupFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * Checks the authentication status once the user clicks the sign up button
+     * **/
     private fun onSignUpSelected() {
         val email = binding.emailTextInput.editText?.text.toString()
         val password = binding.passwordTextInput.editText?.text.toString()

@@ -26,6 +26,8 @@ class FirstSignInFragment : Fragment() {
             inflater, container, false
         )
 
+        // checks the validity of first and last name and if it passes, it adds the user to the
+        // firestore database and navigates the user to the home fragment
         binding.doneButton.setOnClickListener {
             val firstName = binding.firstName.editText!!.text.toString()
             val lastName = binding.lastName.editText!!.text.toString()
@@ -51,6 +53,10 @@ class FirstSignInFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * If the user authentication is successful, add the user to the firestore database and
+     * navigate the user to the home fragment
+     * **/
     fun addUserToDatabase(): Boolean {
         var isAdded = false
         val user = FirebaseAuth.getInstance().currentUser

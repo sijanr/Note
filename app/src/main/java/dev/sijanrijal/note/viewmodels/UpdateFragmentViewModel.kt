@@ -25,6 +25,9 @@ class UpdateFragmentViewModel : ViewModel() {
     val isSuccessful: LiveData<Boolean>
         get() = _isSuccessful
 
+    /**
+     * Create a new note
+     * **/
     fun addNote(note: Note) {
         note.note_id  = databaseRef.document().id
         databaseRef.document(note.note_id)
@@ -39,6 +42,9 @@ class UpdateFragmentViewModel : ViewModel() {
             }
     }
 
+    /**
+     * Update an existing note
+     * **/
     fun updateNote(
         noteTitle: String,
         noteDescription: String,

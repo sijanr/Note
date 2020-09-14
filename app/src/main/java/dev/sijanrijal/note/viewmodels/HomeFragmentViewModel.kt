@@ -11,6 +11,7 @@ import timber.log.Timber
 
 class HomeFragmentViewModel : ViewModel() {
 
+    //reference to the document collection where the user's notes are stored
     private var databaseRef : CollectionReference = FirebaseFirestore.getInstance().collection("users")
         .document(FirebaseAuth.getInstance().currentUser!!.uid).collection("notes")
 
@@ -18,6 +19,7 @@ class HomeFragmentViewModel : ViewModel() {
     val isDatabaseChanged : LiveData<Boolean>
         get() = _isDatabaseChanged
 
+    //listener to the firestore database
     private val listenerRegistration : ListenerRegistration = databaseRef.addSnapshotListener {value: QuerySnapshot?, error: FirebaseFirestoreException? ->
         if(error != null) {
             Timber.d("Listen failed $error")
@@ -33,6 +35,9 @@ class HomeFragmentViewModel : ViewModel() {
 
     val notesList  = ArrayList<Note>()
 
+    /**
+     * Gets the notes of the user from the firestore database
+     * **/
     fun readyAllNotes() {
         notesList.clear()
         databaseRef.get()
@@ -54,6 +59,9 @@ class HomeFragmentViewModel : ViewModel() {
     }
 
 
+    /**
+     * Remove firestore listener
+     * **/
     fun removeListener() {
         listenerRegistration.remove()
     }

@@ -42,7 +42,9 @@ class HomeFragment : Fragment() {
         )
         binding.lifecycleOwner =this
         setHasOptionsMenu(true)
-        //        set the recycler view
+
+        // sets the click listener in recycler view so that if the user taps in a note, it will
+        // take the user to Update Note Fragment so that the user can read/update the note
         val adapter = NoteListAdapter(NoteClickListener {noteTitle, noteContent, date, noteId ->
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToUpdateNoteFragment(
                 noteTitle, noteContent, date, noteId
@@ -52,12 +54,15 @@ class HomeFragment : Fragment() {
         val itemDecorator = ItemDecorator()
         binding.notesRecyclerView.adapter = adapter
         binding.notesRecyclerView.addItemDecoration(itemDecorator)
+
+        //if there is an update to the database, update the recycler view as well
         viewModel.isDatabaseChanged.observe(viewLifecycleOwner, Observer { isDatabaseChanged ->
             if(isDatabaseChanged) {
                 viewModel.readyAllNotes()
             }
         })
 
+        //if the database is ready, display the notes in the recycler view
         viewModel.isDatabaseReady.observe(viewLifecycleOwner, Observer { isDatabaseReady ->
             if(isDatabaseReady) {
                 val userName = FirebaseAuth.getInstance().currentUser!!.displayName?.substringBefore(" ") ?: " "
@@ -65,6 +70,7 @@ class HomeFragment : Fragment() {
             }
         })
 
+        // click listener to naviagate user to update note fragment to create a new note
         binding.fab.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToUpdateNoteFragment("", "", Date(), ""))
             viewModel.onNavigation()
@@ -78,6 +84,9 @@ class HomeFragment : Fragment() {
         inflater.inflate(R.menu.home_menu, menu)
     }
 
+    /**
+     * Logs the user out of the application if the user selects logout from the menu
+     * **/
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.logout_menu -> {
@@ -89,11 +98,17 @@ class HomeFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
+    /**
+     * Remove the firestore listener when the fragment is destroyed
+     * **/
     override fun onDestroy() {
         super.onDestroy()
         viewModel.removeListener()
     }
 
+    /**
+     * Log the user out of the application
+     * **/
     private fun logoutUser() {
         FirebaseAuth.getInstance().signOut()
     }

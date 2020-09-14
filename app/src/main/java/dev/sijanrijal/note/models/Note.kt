@@ -3,6 +3,10 @@ package dev.sijanrijal.note.models
 import com.google.firebase.firestore.IgnoreExtraProperties
 import java.util.*
 
+
+/**
+ * Data class to hold the notes
+ * **/
 @IgnoreExtraProperties
 data class Note (
 

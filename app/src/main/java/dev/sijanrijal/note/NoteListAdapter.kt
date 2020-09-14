@@ -24,6 +24,10 @@ class NoteListAdapter(val noteClickListener: NoteClickListener) : ListAdapter<Da
 
     private val adapterScope = CoroutineScope(Dispatchers.Main)
 
+
+    /**
+     * Create viewholders to display notes and header of the notes
+     * **/
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType) {
             ITEM_NOTE -> NoteListViewHolder.from(parent)
@@ -32,6 +36,9 @@ class NoteListAdapter(val noteClickListener: NoteClickListener) : ListAdapter<Da
         }
     }
 
+    /**
+     * Get the view type to display the correct view in recyclerview
+     * **/
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is DataItem.Header -> ITEM_HEADER
@@ -39,6 +46,9 @@ class NoteListAdapter(val noteClickListener: NoteClickListener) : ListAdapter<Da
         }
     }
 
+    /**
+     * Get the correct data item for a viewholder in the position
+     * **/
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when(holder) {
             is NoteListViewHolder -> {
@@ -53,6 +63,9 @@ class NoteListAdapter(val noteClickListener: NoteClickListener) : ListAdapter<Da
         }
     }
 
+    /**
+     * Adds the user name to be displayed as a header and list of notes
+     * **/
     fun addHeaderAndNoteList(list: List<Note>, username: String) {
         adapterScope.launch {
             val items = when(list) {
@@ -65,6 +78,10 @@ class NoteListAdapter(val noteClickListener: NoteClickListener) : ListAdapter<Da
         }
     }
 
+
+    /**
+     * ViewHolder class that holds the views that display notes
+     * **/
     class NoteListViewHolder private constructor(val binding: @NotNull NotesListLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
@@ -86,6 +103,10 @@ class NoteListAdapter(val noteClickListener: NoteClickListener) : ListAdapter<Da
         }
     }
 
+
+    /**
+     * ViewHolder class that holds the header for the recycler view
+     * **/
     class UserViewHolder(val view : View) : RecyclerView.ViewHolder(view) {
         fun bind(userName: String) {
             view.header_title.text = "Here are your notes $userName"
@@ -100,6 +121,9 @@ class NoteListAdapter(val noteClickListener: NoteClickListener) : ListAdapter<Da
     }
 }
 
+/**
+ * DiffUtil Callback to handle the changes in notes list
+ * **/
 class NoteListDiffCallback : DiffUtil.ItemCallback<DataItem>() {
     override fun areItemsTheSame(oldItem: DataItem, newItem: DataItem): Boolean {
         return oldItem.noteId == newItem.noteId
@@ -111,10 +135,16 @@ class NoteListDiffCallback : DiffUtil.ItemCallback<DataItem>() {
 
 }
 
+/**
+ * Class that handles click listener for recycler view items
+ * **/
 class NoteClickListener(val clickListener : (noteTitle: String, noteContent: String, createdDate: Date, noteId: String) -> Unit) {
     fun onClick(note: Note) = clickListener(note.note_title, note.description, note.created_date, note.note_id)
 }
 
+/**
+ * Class that holds the type of items in the recycler view
+ * **/
 sealed class DataItem {
     data class NoteItem(val note : Note) : DataItem() {
         override val noteId = note.note_id
