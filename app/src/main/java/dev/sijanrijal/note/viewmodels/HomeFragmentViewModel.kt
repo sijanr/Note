@@ -60,6 +60,20 @@ class HomeFragmentViewModel : ViewModel() {
             }
     }
 
+    /**
+     * Delete a note from the database
+     * **/
+    fun deleteNote(note: Note) {
+        databaseRef.document(note.note_id)
+            .delete()
+            .addOnSuccessListener {
+                Timber.d("Note deleted")
+            }
+            .addOnFailureListener {exception ->
+                Timber.d("Failed to delete note $exception")
+            }
+    }
+
 
     /**
      * Remove firestore listener
