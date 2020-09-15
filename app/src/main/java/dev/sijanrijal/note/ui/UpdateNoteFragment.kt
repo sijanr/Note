@@ -12,10 +12,10 @@ import dev.sijanrijal.note.models.Note
 import dev.sijanrijal.note.viewmodels.UpdateFragmentViewModel
 import timber.log.Timber
 
-class UpdateNoteFragment  : Fragment() {
+class UpdateNoteFragment : Fragment() {
 
-    private lateinit var binding : FragmentAddNoteBinding
-    private val viewModel : UpdateFragmentViewModel = UpdateFragmentViewModel()
+    private lateinit var binding: FragmentAddNoteBinding
+    private val viewModel: UpdateFragmentViewModel = UpdateFragmentViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,12 +23,13 @@ class UpdateNoteFragment  : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAddNoteBinding.inflate(
-            inflater, container, false)
+            inflater, container, false
+        )
 
         //get an argument from the bundle if the user is trying to update the note
-        val argument =  UpdateNoteFragmentArgs.fromBundle(requireArguments())
+        val argument = UpdateNoteFragmentArgs.fromBundle(requireArguments())
         var isUpdate = false
-        if(argument.noteTitle.isNotEmpty() && argument.description.isNotEmpty()) {
+        if (argument.noteTitle.isNotEmpty() && argument.description.isNotEmpty()) {
             binding.editTextTitle.text.append(argument.noteTitle)
             binding.description.text.append(argument.description)
             isUpdate = true
@@ -40,22 +41,32 @@ class UpdateNoteFragment  : Fragment() {
             val description = binding.description.text.toString().trim()
 
             //create a new note
-            if(!isUpdate) {
-                viewModel.addNote(Note(note_title = title,
-                    description = description))
+            if (!isUpdate) {
+                viewModel.addNote(
+                    Note(
+                        note_title = title,
+                        description = description
+                    )
+                )
             }
 
             //update an existing note
             else {
-                viewModel.updateNote(argument.noteTitle, argument.description, argument.createdDate, argument.noteId,
-                    Note(note_title = title, created_date = argument.createdDate, description = description))
+                viewModel.updateNote(
+                    argument.noteTitle, argument.description, argument.createdDate, argument.noteId,
+                    Note(
+                        note_title = title,
+                        created_date = argument.createdDate,
+                        description = description
+                    )
+                )
             }
         }
 
         //if the note was added/updated successfuly, take the user to the home fragment to see the
         //list of user's notes
         viewModel.isSuccessful.observe(viewLifecycleOwner, Observer {
-            if(it) {
+            if (it) {
                 findNavController().navigate(UpdateNoteFragmentDirections.actionUpdateNoteFragmentToHomeFragment())
             } else {
                 Timber.d("Add not successful")

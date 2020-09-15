@@ -54,7 +54,7 @@ class LoginFragmentViewModel : ViewModel() {
             val user = firebaseAuth.currentUser
             user?.let {
                 Timber.d("onAuthStateChanged: signed in ${it.uid}")
-                if(!it.isEmailVerified) {
+                if (!it.isEmailVerified) {
                     errorMessage = CHECK_INBOX_VERIFICATION
                     FirebaseAuth.getInstance().signOut()
                 } else {

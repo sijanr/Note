@@ -20,7 +20,9 @@ import java.util.*
 
 private const val ITEM_HEADER = 0
 private const val ITEM_NOTE = 1
-class NoteListAdapter(val noteClickListener: NoteClickListener) : ListAdapter<DataItem, RecyclerView.ViewHolder>(NoteListDiffCallback()) {
+
+class NoteListAdapter(val noteClickListener: NoteClickListener) :
+    ListAdapter<DataItem, RecyclerView.ViewHolder>(NoteListDiffCallback()) {
 
     private val adapterScope = CoroutineScope(Dispatchers.Main)
 
@@ -29,7 +31,7 @@ class NoteListAdapter(val noteClickListener: NoteClickListener) : ListAdapter<Da
      * Create viewholders to display notes and header of the notes
      * **/
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when(viewType) {
+        return when (viewType) {
             ITEM_NOTE -> NoteListViewHolder.from(parent)
             ITEM_HEADER -> UserViewHolder.from(parent)
             else -> throw ClassCastException("Unknow viewtype $viewType")
@@ -50,7 +52,7 @@ class NoteListAdapter(val noteClickListener: NoteClickListener) : ListAdapter<Da
      * Get the correct data item for a viewholder in the position
      * **/
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when(holder) {
+        when (holder) {
             is NoteListViewHolder -> {
                 val note = getItem(position) as DataItem.NoteItem
                 holder.bind(noteClickListener, note.note)
@@ -68,7 +70,7 @@ class NoteListAdapter(val noteClickListener: NoteClickListener) : ListAdapter<Da
      * **/
     fun addHeaderAndNoteList(list: List<Note>, username: String) {
         adapterScope.launch {
-            val items = when(list) {
+            val items = when (list) {
                 null -> listOf(DataItem.Header(username))
                 else -> listOf(DataItem.Header(username)) + list.map { DataItem.NoteItem(it) }
             }
@@ -82,7 +84,8 @@ class NoteListAdapter(val noteClickListener: NoteClickListener) : ListAdapter<Da
     /**
      * ViewHolder class that holds the views that display notes
      * **/
-    class NoteListViewHolder private constructor(val binding: @NotNull NotesListLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
+    class NoteListViewHolder private constructor(val binding: @NotNull NotesListLayoutBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
             noteClickListener: NoteClickListener,
@@ -107,12 +110,13 @@ class NoteListAdapter(val noteClickListener: NoteClickListener) : ListAdapter<Da
     /**
      * ViewHolder class that holds the header for the recycler view
      * **/
-    class UserViewHolder(val view : View) : RecyclerView.ViewHolder(view) {
+    class UserViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         fun bind(userName: String) {
             view.header_title.text = "Here are your notes $userName"
         }
+
         companion object {
-            fun from(parent: ViewGroup) : UserViewHolder {
+            fun from(parent: ViewGroup): UserViewHolder {
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.user_header, parent, false)
                 return UserViewHolder(view)
@@ -138,15 +142,16 @@ class NoteListDiffCallback : DiffUtil.ItemCallback<DataItem>() {
 /**
  * Class that handles click listener for recycler view items
  * **/
-class NoteClickListener(val clickListener : (noteTitle: String, noteContent: String, createdDate: Date, noteId: String) -> Unit) {
-    fun onClick(note: Note) = clickListener(note.note_title, note.description, note.created_date, note.note_id)
+class NoteClickListener(val clickListener: (noteTitle: String, noteContent: String, createdDate: Date, noteId: String) -> Unit) {
+    fun onClick(note: Note) =
+        clickListener(note.note_title, note.description, note.created_date, note.note_id)
 }
 
 /**
  * Class that holds the type of items in the recycler view
  * **/
 sealed class DataItem {
-    data class NoteItem(val note : Note) : DataItem() {
+    data class NoteItem(val note: Note) : DataItem() {
         override val noteId = note.note_id
     }
 
@@ -154,5 +159,5 @@ sealed class DataItem {
         override val noteId: String = "0"
     }
 
-    abstract val noteId : String
+    abstract val noteId: String
 }

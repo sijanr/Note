@@ -42,21 +42,23 @@ class LoginFragment : Fragment() {
         // navigate the user to the home fragment if login is successful and the user is a verified
         // user or display an error message if there were any issues with authentication
         binding.loginButton.setOnClickListener {
-            viewModel.onLoginButtonClicked(binding.emailTextInput.editText?.text.toString(),
-                binding.passwordTextInput.editText?.text.toString())
+            viewModel.onLoginButtonClicked(
+                binding.emailTextInput.editText?.text.toString(),
+                binding.passwordTextInput.editText?.text.toString()
+            )
         }
 
         // if the authentication was successful, navigate the user to the first sign in fragment
         // else to the home fragment
         viewModel.isSignInSuccessful.observe(viewLifecycleOwner, Observer { isSignInSuccessful ->
             if (isSignInSuccessful) {
-                if(viewModel.isNewUser) {
+                if (viewModel.isNewUser) {
                     findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToFirstSignInFragment())
                 } else {
                     findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToHomeFragment())
                 }
             } else {
-                if(viewModel.errorMessage.equals(CHECK_INBOX_VERIFICATION)) {
+                if (viewModel.errorMessage.equals(CHECK_INBOX_VERIFICATION)) {
                     binding.emailTextInput.error = null
                     binding.passwordTextInput.error = null
                 } else {

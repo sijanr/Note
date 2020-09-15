@@ -14,6 +14,5 @@ class ItemDecorator : RecyclerView.ItemDecoration() {
         state: RecyclerView.State
     ) {
         outRect.bottom = heightSpacing
-
     }
 }

@@ -12,28 +12,30 @@ import timber.log.Timber
 class HomeFragmentViewModel : ViewModel() {
 
     //reference to the document collection where the user's notes are stored
-    private var databaseRef : CollectionReference = FirebaseFirestore.getInstance().collection("users")
-        .document(FirebaseAuth.getInstance().currentUser!!.uid).collection("notes")
+    private var databaseRef: CollectionReference =
+        FirebaseFirestore.getInstance().collection("users")
+            .document(FirebaseAuth.getInstance().currentUser!!.uid).collection("notes")
 
     private val _isDatabaseChanged = MutableLiveData<Boolean>()
-    val isDatabaseChanged : LiveData<Boolean>
+    val isDatabaseChanged: LiveData<Boolean>
         get() = _isDatabaseChanged
 
     //listener to the firestore database
-    private val listenerRegistration : ListenerRegistration = databaseRef.addSnapshotListener {value: QuerySnapshot?, error: FirebaseFirestoreException? ->
-        if(error != null) {
-            Timber.d("Listen failed $error")
-            return@addSnapshotListener
+    private val listenerRegistration: ListenerRegistration =
+        databaseRef.addSnapshotListener { value: QuerySnapshot?, error: FirebaseFirestoreException? ->
+            if (error != null) {
+                Timber.d("Listen failed $error")
+                return@addSnapshotListener
+            }
+            Timber.d("Listen successful")
+            _isDatabaseChanged.value = true
         }
-        Timber.d("Listen successful")
-        _isDatabaseChanged.value = true
-    }
 
     private val _isDatabaseReady = MutableLiveData<Boolean>()
-    val isDatabaseReady : LiveData<Boolean>
+    val isDatabaseReady: LiveData<Boolean>
         get() = _isDatabaseReady
 
-    val notesList  = ArrayList<Note>()
+    val notesList = ArrayList<Note>()
 
     /**
      * Gets the notes of the user from the firestore database
@@ -42,7 +44,7 @@ class HomeFragmentViewModel : ViewModel() {
         notesList.clear()
         databaseRef.get()
             .addOnSuccessListener { result ->
-                for(document in result) {
+                for (document in result) {
                     val element = Note(
                         note_title = document.get("note_title").toString(),
                         description = document.getString("description") ?: "",

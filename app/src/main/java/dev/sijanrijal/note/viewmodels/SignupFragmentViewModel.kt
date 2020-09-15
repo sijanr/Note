@@ -15,7 +15,7 @@ import timber.log.Timber
 class SignupFragmentViewModel : ViewModel() {
 
     private val _isSignUpSuccessful = MutableLiveData<Boolean>()
-    val isSignUpSuccessful : LiveData<Boolean>
+    val isSignUpSuccessful: LiveData<Boolean>
         get() = _isSignUpSuccessful
 
     var errorMessage = ""
@@ -25,11 +25,11 @@ class SignupFragmentViewModel : ViewModel() {
      * verification email to the user. If there was an issue validating user's email or password
      * display the error message
      * **/
-    fun onSignUpClicked(email : String?, password : String?) {
-        if(checkEmailPasswordValidity(email, password)) {
+    fun onSignUpClicked(email: String?, password: String?) {
+        if (checkEmailPasswordValidity(email, password)) {
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email!!, password!!)
                 .addOnCompleteListener { task ->
-                    if(task.isSuccessful) {
+                    if (task.isSuccessful) {
                         Timber.d("onComplete: AuthState: ${FirebaseAuth.getInstance().currentUser?.uid}")
                         sendVerificationEmail()
                         FirebaseAuth.getInstance().signOut()
@@ -54,7 +54,7 @@ class SignupFragmentViewModel : ViewModel() {
             user.sendEmailVerification()
                 .addOnCompleteListener { task ->
                     _isSignUpSuccessful.value = task.isSuccessful
-                    if(!task.isSuccessful) {
+                    if (!task.isSuccessful) {
                         errorMessage = VERIFY_MESSAGE_ERROR
                         _isSignUpSuccessful.value = false
                     }
