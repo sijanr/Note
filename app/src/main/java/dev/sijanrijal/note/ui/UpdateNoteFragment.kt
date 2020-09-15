@@ -1,9 +1,11 @@
 package dev.sijanrijal.note.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -39,7 +41,8 @@ class UpdateNoteFragment : Fragment() {
         binding.fab.setOnClickListener {
             val title = binding.editTextTitle.text.toString().trim()
             val description = binding.description.text.toString().trim()
-
+            binding.editTextTitle.clearFocus()
+            binding.description.clearFocus()
             //create a new note
             if (!isUpdate) {
                 viewModel.addNote(
@@ -67,6 +70,7 @@ class UpdateNoteFragment : Fragment() {
         //list of user's notes
         viewModel.isSuccessful.observe(viewLifecycleOwner, Observer {
             if (it) {
+
                 findNavController().navigate(UpdateNoteFragmentDirections.actionUpdateNoteFragmentToHomeFragment())
             } else {
                 Timber.d("Add not successful")
