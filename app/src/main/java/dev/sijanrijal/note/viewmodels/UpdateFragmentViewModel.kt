@@ -29,7 +29,7 @@ class UpdateFragmentViewModel : ViewModel() {
      * Create a new note
      * **/
     fun addNote(note: Note) {
-        note.note_id  = databaseRef.document().id
+        note.note_id = databaseRef.document().id
         databaseRef.document(note.note_id)
             .set(note)
             .addOnSuccessListener {
@@ -49,18 +49,22 @@ class UpdateFragmentViewModel : ViewModel() {
         noteTitle: String,
         noteDescription: String,
         createdDate: Date,
-        noteId : String,
-        updatedNote: Note) {
+        noteId: String,
+        updatedNote: Note
+    ) {
         if (noteTitle.equals(updatedNote.note_title, false)
-            && noteDescription.equals(updatedNote.description, false)) {
+            && noteDescription.equals(updatedNote.description, false)
+        ) {
             _isSuccessful.value = true
         } else {
             Timber.d("Document id: $noteId")
             databaseRef.document(noteId)
-                .update("note_title", updatedNote.note_title,
-                "description", updatedNote.description,
-                "created_date", createdDate.toString("MM-dd-yyyy"),
-                "last_modified", updatedNote.last_modified)
+                .update(
+                    "note_title", updatedNote.note_title,
+                    "description", updatedNote.description,
+                    "created_date", createdDate.toString("MM-dd-yyyy"),
+                    "last_modified", updatedNote.last_modified
+                )
                 .addOnSuccessListener {
                     _isSuccessful.value = true
                 }

@@ -3,9 +3,11 @@
 <layout>
 
     <data>
+
         <variable
             name="note"
             type="dev.sijanrijal.note.models.Note" />
+
         <variable
             name="noteListClick"
             type="dev.sijanrijal.note.NoteClickListener" />
@@ -15,8 +17,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        app:cardCornerRadius="10dp"
-        android:onClick="@{() -> noteListClick.onClick(note)}">
+        android:onClick="@{() -> noteListClick.onClick(note)}"
+        app:cardCornerRadius="10dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -34,6 +36,7 @@
             <TextView
                 android:id="@+id/note_title"
                 style="@style/TextAppearance.MaterialComponents.Headline6"
+                noteTitle="@{note}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -43,7 +46,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/label_color"
-                noteTitle="@{note}"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -2,12 +2,11 @@
 
 <layout>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         tools:context=".ui.MainActivity">
 
         <com.google.android.material.appbar.AppBarLayout
@@ -15,18 +14,17 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                style="@style/Widget.MaterialComponents.Toolbar.Primary"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:id="@+id/toolbar"
-                app:title="@string/app_name"
-                style="@style/Widget.MaterialComponents.Toolbar.Primary"/>
+                app:title="@string/app_name" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="?attr/actionBarSize"
-            >
+            android:layout_marginTop="?attr/actionBarSize">
 
             <fragment
                 android:id="@+id/noteNavHostFragment"
