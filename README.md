@@ -10,7 +10,7 @@ Note is an android application that allows you to create notes on the go and sav
 
 ## Getting Started
 The application supports multiple versions of Android; from KitKat to Android 10. 
-If you would like to try the app without building the project, you can download the artifact from the latest tests-passed workflow result so that you can install it directly on your phone.
+If you would like to try the app without building the project, you can download the APK from apk/Note.apk and install it directly on your phone. The device also needs to be connected to the Internet for the app to work.
 
 ### Building the project
 #### Prerequisites
@@ -21,6 +21,7 @@ If you would like to try the app without building the project, you can download 
 #### Setup
 * Add the project to your firebase console and generate a google-services JSON file and store it in the app/ directory
 * Build the project and install it in an emulator or an Android phone to try the application
+* Requires Internet Access
 
 ## Built With
 * Firebase
