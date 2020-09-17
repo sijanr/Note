@@ -10,7 +10,7 @@ Note is an android application that allows you to create notes on the go and sav
 
 ## Getting Started
 The application supports multiple versions of Android; from KitKat to Android 10. 
-If you would like to try the app without building the project, you can find the APK in the apk folder so that you can install it directly on your phone.
+If you would like to try the app without building the project, you can download the artifact from the latest workflow so that you can install it directly on your phone.
 
 ### Building the project
 #### Prerequisites
