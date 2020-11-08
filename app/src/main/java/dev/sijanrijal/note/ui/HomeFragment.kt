@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,11 +27,6 @@ class HomeFragment : Fragment() {
     private lateinit var viewModel: HomeFragmentViewModel
     private lateinit var binding: FragmentHomeBinding
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        viewModel = HomeFragmentViewModel()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,8 +37,11 @@ class HomeFragment : Fragment() {
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_home, container, false
         )
+
+        viewModel = ViewModelProvider(this).get(HomeFragmentViewModel::class.java)
         binding.lifecycleOwner = this
         setHasOptionsMenu(true)
+
 
         // sets the click listener in recycler view so that if the user taps in a note, it will
         // take the user to Update Note Fragment so that the user can read/update the note
@@ -54,27 +53,28 @@ class HomeFragment : Fragment() {
             )
             viewModel.onNavigation()
         })
+
         val itemDecorator = ItemDecorator()
         binding.notesRecyclerView.adapter = adapter
         binding.notesRecyclerView.addItemDecoration(itemDecorator)
         addSwipeToDelete()
 
+        val userName =
+            FirebaseAuth.getInstance().currentUser!!.displayName?.substringBefore(" ")
+                ?: " "
+
+        viewModel.readyAllNotes()
+
+        adapter.addHeaderAndNoteList(viewModel.notesList, userName)
+
         //if there is an update to the database, update the recycler view as well
         viewModel.isDatabaseChanged.observe(viewLifecycleOwner, Observer { isDatabaseChanged ->
             if (isDatabaseChanged) {
                 viewModel.readyAllNotes()
-            }
-        })
-
-        //if the database is ready, display the notes in the recycler view
-        viewModel.isDatabaseReady.observe(viewLifecycleOwner, Observer { isDatabaseReady ->
-            if (isDatabaseReady) {
-                val userName =
-                    FirebaseAuth.getInstance().currentUser!!.displayName?.substringBefore(" ")
-                        ?: " "
                 adapter.addHeaderAndNoteList(viewModel.notesList, userName)
             }
         })
+
 
         // click listener to naviagate user to update note fragment to create a new note
         binding.fab.setOnClickListener {

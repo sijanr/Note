@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import dev.sijanrijal.note.databinding.FragmentAddNoteBinding
 import dev.sijanrijal.note.models.Note
@@ -17,7 +18,7 @@ import timber.log.Timber
 class UpdateNoteFragment : Fragment() {
 
     private lateinit var binding: FragmentAddNoteBinding
-    private val viewModel: UpdateFragmentViewModel = UpdateFragmentViewModel()
+    private lateinit var viewModel: UpdateFragmentViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,6 +28,8 @@ class UpdateNoteFragment : Fragment() {
         binding = FragmentAddNoteBinding.inflate(
             inflater, container, false
         )
+
+        viewModel = ViewModelProvider(this).get(UpdateFragmentViewModel::class.java)
 
         //get an argument from the bundle if the user is trying to update the note
         val argument = UpdateNoteFragmentArgs.fromBundle(requireArguments())

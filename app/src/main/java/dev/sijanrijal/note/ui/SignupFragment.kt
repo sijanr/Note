@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import dev.sijanrijal.note.R
@@ -18,7 +19,7 @@ import timber.log.Timber
 class SignupFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
-    private val viewModel = SignupFragmentViewModel()
+    private lateinit var viewModel : SignupFragmentViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +33,8 @@ class SignupFragment : Fragment() {
         binding.loginButton.setOnClickListener {
             onSignUpSelected()
         }
+
+        viewModel = ViewModelProvider(this).get(SignupFragmentViewModel::class.java)
 
         //listen to whether the signup process was successful or not
         // if it was successful navigate the user to the login screen
