@@ -31,10 +31,6 @@ class HomeFragmentViewModel : ViewModel() {
             _isDatabaseChanged.value = true
         }
 
-    private val _isDatabaseReady = MutableLiveData<Boolean>()
-    val isDatabaseReady: LiveData<Boolean>
-        get() = _isDatabaseReady
-
     val notesList = ArrayList<Note>()
 
     /**
@@ -53,7 +49,6 @@ class HomeFragmentViewModel : ViewModel() {
                     notesList.add(element)
                     Timber.d("Notes Added $element")
                 }
-                _isDatabaseReady.value = true
             }
             .addOnFailureListener { exception ->
                 Timber.d("Failed to retrieve documents")
