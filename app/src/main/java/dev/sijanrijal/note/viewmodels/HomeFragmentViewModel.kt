@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
-import com.google.firebase.firestore.ktx.toObject
 import dev.sijanrijal.note.models.Note
 import timber.log.Timber
 
@@ -20,40 +19,36 @@ class HomeFragmentViewModel : ViewModel() {
     val isDatabaseChanged: LiveData<Boolean>
         get() = _isDatabaseChanged
 
-    //listener to the firestore database
-    private val listenerRegistration: ListenerRegistration =
-        databaseRef.addSnapshotListener { value: QuerySnapshot?, error: FirebaseFirestoreException? ->
+    private var listener : ListenerRegistration
+
+    val notesList = ArrayList<Note>()
+
+    init {
+        Timber.d("Viewmodel initialized")
+
+        listener = databaseRef.addSnapshotListener { values, error: FirebaseFirestoreException? ->
             if (error != null) {
                 Timber.d("Listen failed $error")
                 return@addSnapshotListener
             }
             Timber.d("Listen successful")
+
+            notesList.clear()
+
+            for (document in values!!) {
+                val element = Note(
+                    note_title = document.get("note_title").toString(),
+                    description = document.getString("description") ?: "",
+                    note_id = document.getString("note_id") ?: ""
+                )
+                notesList.add(element)
+                Timber.d("Notes Added $element")
+            }
             _isDatabaseChanged.value = true
         }
 
-    val notesList = ArrayList<Note>()
-
-    /**
-     * Gets the notes of the user from the firestore database
-     * **/
-    fun readyAllNotes() {
-        notesList.clear()
-        databaseRef.get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    val element = Note(
-                        note_title = document.get("note_title").toString(),
-                        description = document.getString("description") ?: "",
-                        note_id = document.getString("note_id") ?: ""
-                    )
-                    notesList.add(element)
-                    Timber.d("Notes Added $element")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Timber.d("Failed to retrieve documents")
-            }
     }
+
 
     /**
      * Delete a note from the database
@@ -69,22 +64,18 @@ class HomeFragmentViewModel : ViewModel() {
             }
     }
 
-
     /**
-     * Remove firestore listener
+     * Remove database change listener
      * **/
-    fun removeListener() {
-        listenerRegistration.remove()
+    private fun removeListener() {
+        listener.remove()
     }
 
-    fun onNavigation() {
-        _isDatabaseChanged.value = false
-    }
 
     override fun onCleared() {
         super.onCleared()
         Timber.d("onClear called")
+        removeListener()
     }
-
 
 }

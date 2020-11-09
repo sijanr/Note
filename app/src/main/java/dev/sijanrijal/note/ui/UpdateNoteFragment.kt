@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import dev.sijanrijal.note.R
 import dev.sijanrijal.note.databinding.FragmentAddNoteBinding
 import dev.sijanrijal.note.models.Note
 import dev.sijanrijal.note.viewmodels.UpdateFragmentViewModel
@@ -73,8 +74,7 @@ class UpdateNoteFragment : Fragment() {
         //list of user's notes
         viewModel.isSuccessful.observe(viewLifecycleOwner, Observer {
             if (it) {
-
-                findNavController().navigate(UpdateNoteFragmentDirections.actionUpdateNoteFragmentToHomeFragment())
+                findNavController().navigateUp()
             } else {
                 Timber.d("Add not successful")
             }
