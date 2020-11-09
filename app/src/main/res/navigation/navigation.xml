@@ -9,15 +9,17 @@
         android:label="HomeFragment" >
         <action
             android:id="@+id/action_homeFragment_to_updateNoteFragment"
-            app:destination="@id/updateNoteFragment" >
-            <argument
-                android:name="noteTitle" />
-            <argument
-                android:name="description" />
+            app:destination="@id/updateNoteFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out">
+            <argument android:name="noteTitle" />
+            <argument android:name="description" />
         </action>
         <action
             android:id="@+id/action_homeFragment_to_loginFragment"
             app:destination="@id/loginFragment"
+            app:enterAnim="@anim/slide_from_up"
+            app:exitAnim="@anim/slide_bottom"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
     </fragment>
@@ -28,14 +30,24 @@
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
             app:destination="@id/homeFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_loginFragment_to_signupFragment2"
-            app:destination="@id/signupFragment" />
+            app:destination="@id/signupFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
         <action
             android:id="@+id/action_loginFragment_to_firstSignInFragment"
             app:destination="@id/firstSignInFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
     </fragment>
@@ -46,6 +58,8 @@
         <action
             android:id="@+id/action_signupFragment_to_loginFragment"
             app:destination="@id/loginFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
             app:popUpTo="@id/loginFragment" />
     </fragment>
     <fragment
@@ -55,6 +69,10 @@
         <action
             android:id="@+id/action_firstSignInFragment_to_homeFragment"
             app:destination="@id/homeFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
             app:popUpTo="@id/firstSignInFragment"
             app:popUpToInclusive="true" />
     </fragment>
@@ -68,11 +86,6 @@
         <argument
             android:name="description"
             app:argType="string" />
-        <action
-            android:id="@+id/action_updateNoteFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="false" />
         <argument
             android:name="createdDate"
             app:argType="java.util.Date" />
