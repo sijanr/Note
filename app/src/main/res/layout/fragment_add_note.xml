@@ -3,10 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-    </data>
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -30,8 +26,8 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
                     android:layout_marginEnd="16dp"
-                    android:backgroundTint="@android:color/transparent"
-                    android:hint="Title"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/title"
                     android:inputType="textMultiLine" />
 
                 <EditText
@@ -45,8 +41,8 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"
-                    android:backgroundTint="@android:color/transparent"
-                    android:hint="Start writing..."
+                    android:background="@android:color/transparent"
+                    android:hint="@string/start_writing"
                     android:inputType="textMultiLine|textCapSentences" />
             </RelativeLayout>
 
