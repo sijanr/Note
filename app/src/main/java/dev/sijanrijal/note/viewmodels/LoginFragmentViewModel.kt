@@ -12,8 +12,6 @@ import timber.log.Timber
 
 class LoginFragmentViewModel : ViewModel() {
 
-    lateinit var mAuthListener: FirebaseAuth.AuthStateListener
-
     private val _isSignInSuccessful = MutableLiveData<Boolean>()
     val isSignInSuccessful: LiveData<Boolean>
         get() = _isSignInSuccessful
@@ -21,6 +19,13 @@ class LoginFragmentViewModel : ViewModel() {
     var errorMessage = ""
 
     var isNewUser = false
+
+    private lateinit var mAuthListener: FirebaseAuth.AuthStateListener
+
+    init {
+        setupFirebaseAuthListener()
+        FirebaseAuth.getInstance().addAuthStateListener(mAuthListener)
+    }
 
 
     /**
@@ -31,13 +36,15 @@ class LoginFragmentViewModel : ViewModel() {
         if (checkEmailPasswordValidity(email, password)) {
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email!!, password!!)
                 .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        checkUserLoginVerification()
+                    } else {
+                        errorMessage = AUTHENTICATION_ERROR
+                        Timber.d("Authentication failed: $errorMessage")
+                        _isSignInSuccessful.value = false
+                    }
+                }
 
-                }
-                .addOnFailureListener { exception ->
-                    Timber.d("Authentication failed: ${exception.message}")
-                    errorMessage = AUTHENTICATION_ERROR
-                    _isSignInSuccessful.value = false
-                }
         } else {
             errorMessage = VALIDITY_FAIL
             _isSignInSuccessful.value = false
@@ -49,21 +56,29 @@ class LoginFragmentViewModel : ViewModel() {
      * Checks whether the user is a registered user and if so, performs an additional check to
      * verify if the user has verfied the registered email
      * **/
-    fun setupFirebaseAuthListener() {
+    fun checkUserLoginVerification() {
+        FirebaseAuth.getInstance().currentUser?.let { user ->
+            if (!user.isEmailVerified) {
+                errorMessage = CHECK_INBOX_VERIFICATION
+                FirebaseAuth.getInstance().signOut()
+            } else {
+                isNewUser = user.metadata!!.lastSignInTimestamp == user.metadata!!.creationTimestamp
+                Timber.d("isNewUser: $isNewUser")
+            }
+            _isSignInSuccessful.value = user.isEmailVerified
+        }
+    }
+
+    private fun setupFirebaseAuthListener() {
         mAuthListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
             val user = firebaseAuth.currentUser
-            user?.let {
-                Timber.d("onAuthStateChanged: signed in ${it.uid}")
-                if (!it.isEmailVerified) {
-                    errorMessage = CHECK_INBOX_VERIFICATION
-                    FirebaseAuth.getInstance().signOut()
-                } else {
-                    isNewUser = it.metadata!!.lastSignInTimestamp == it.metadata!!.creationTimestamp
-                    Timber.d("isNewUser: $isNewUser")
-                }
-                _isSignInSuccessful.value = it.isEmailVerified
+            if (user == null) {
             }
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener)
+    }
 }
