@@ -20,14 +20,6 @@ class LoginFragmentViewModel : ViewModel() {
 
     var isNewUser = false
 
-    private lateinit var mAuthListener: FirebaseAuth.AuthStateListener
-
-    init {
-        setupFirebaseAuthListener()
-        FirebaseAuth.getInstance().addAuthStateListener(mAuthListener)
-    }
-
-
     /**
      * Checks for errors in user's email and password and notifies the UI whether the authentication
      * was successful or not
@@ -69,16 +61,4 @@ class LoginFragmentViewModel : ViewModel() {
         }
     }
 
-    private fun setupFirebaseAuthListener() {
-        mAuthListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
-            val user = firebaseAuth.currentUser
-            if (user == null) {
-            }
-        }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener)
-    }
 }

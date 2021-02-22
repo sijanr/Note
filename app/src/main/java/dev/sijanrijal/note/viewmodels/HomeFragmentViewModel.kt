@@ -11,28 +11,20 @@ import timber.log.Timber
 class HomeFragmentViewModel : ViewModel() {
 
     //reference to the document collection where the user's notes are stored
-    private var databaseRef: CollectionReference?
-
-
+    private var databaseRef: CollectionReference = FirebaseFirestore.getInstance().collection("users")
+        .document(FirebaseAuth.getInstance().currentUser!!.uid).collection("notes")
 
     private val _isDatabaseChanged = MutableLiveData<Boolean>()
     val isDatabaseChanged: LiveData<Boolean>
         get() = _isDatabaseChanged
 
-    private var listener : ListenerRegistration?
+    private var listener : ListenerRegistration
 
     val notesList = ArrayList<Note>()
 
     init {
 
-        databaseRef = FirebaseAuth.getInstance().currentUser?.uid?.let { userId ->
-            FirebaseFirestore.getInstance().collection("users")
-                .document(userId).collection("notes")
-        }
-        Timber.d("Viewmodel initialized")
-
-        listener = databaseRef?.let {
-            databaseRef!!.addSnapshotListener { values, error: FirebaseFirestoreException? ->
+        listener = databaseRef.addSnapshotListener { values, error: FirebaseFirestoreException? ->
                 if (error != null) {
                     Timber.d("Listen failed $error")
                     return@addSnapshotListener
@@ -52,8 +44,6 @@ class HomeFragmentViewModel : ViewModel() {
                 }
                 _isDatabaseChanged.value = true
             }
-        }
-
 
     }
 
@@ -62,7 +52,7 @@ class HomeFragmentViewModel : ViewModel() {
      * Delete a note from the database
      * **/
     fun deleteNote(note: Note) {
-        databaseRef!!.document(note.note_id)
+        databaseRef.document(note.note_id)
             .delete()
             .addOnSuccessListener {
                 Timber.d("Note deleted")
@@ -78,13 +68,12 @@ class HomeFragmentViewModel : ViewModel() {
      * Remove database change listener
      * **/
     private fun removeListener() {
-        listener?.remove()
+        listener.remove()
     }
 
 
     override fun onCleared() {
         super.onCleared()
-        Timber.d("onClear called")
         removeListener()
     }
 
