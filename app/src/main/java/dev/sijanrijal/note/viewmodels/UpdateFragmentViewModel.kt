@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import dev.sijanrijal.note.models.Note
 import dev.sijanrijal.note.toString
@@ -12,14 +11,8 @@ import timber.log.Timber
 import java.util.*
 
 class UpdateFragmentViewModel : ViewModel() {
-    private lateinit var databaseRef: CollectionReference
-
-    init {
-        FirebaseAuth.getInstance().currentUser?.let { user ->
-            databaseRef = FirebaseFirestore.getInstance().collection("users")
-                .document(user.uid).collection("notes")
-        }
-    }
+    private var databaseRef = FirebaseFirestore.getInstance().collection("users")
+        .document(FirebaseAuth.getInstance().uid!!).collection("notes")
 
     private val _isSuccessful = MutableLiveData<Boolean>()
     val isSuccessful: LiveData<Boolean>
