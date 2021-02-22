@@ -9,6 +9,15 @@
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
     </style>
 
+    <style name="LauncherTheme" parent="AppTheme">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimationStyle</item>
+    </style>
+
+    <style name="WindowAnimationStyle">
+        <item name="android:windowEnterAnimation">@android:anim/linear_interpolator</item>
+    </style>
     <style name="Widget.Note.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxBackgroundMode">outline</item>
         <item name="boxStrokeWidth">4dp</item>
@@ -36,6 +45,14 @@
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginStart">24dp</item>
         <item name="android:layout_marginTop">24dp</item>
+    </style>
+
+    <style name="TextAppearance.NoteHeading.Text" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="fontFamily">@font/open_sans_semibold</item>
+    </style>
+
+    <style name="TextAppearance.NoteBody.Text" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="fontFamily">@font/open_sans</item>
     </style>
 
 
