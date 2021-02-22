@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -17,8 +16,6 @@ import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 import dev.sijanrijal.note.CHECK_INBOX_VERIFICATION
 import dev.sijanrijal.note.R
 import dev.sijanrijal.note.databinding.FragmentLoginBinding
@@ -42,7 +39,7 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
 
         Timber.d("Here at Login fragment")
@@ -85,7 +82,7 @@ class LoginFragment : Fragment() {
                     findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToHomeFragment())
                 }
             } else {
-                if (viewModel.errorMessage.equals(CHECK_INBOX_VERIFICATION)) {
+                if (viewModel.errorMessage == CHECK_INBOX_VERIFICATION) {
                     displayErrorMessage(null)
                 } else {
                     displayErrorMessage(viewModel.errorMessage)

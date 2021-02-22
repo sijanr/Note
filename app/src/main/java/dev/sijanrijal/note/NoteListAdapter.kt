@@ -48,6 +48,8 @@ class NoteListAdapter(val noteClickListener: NoteClickListener) :
         }
     }
 
+
+
     /**
      * Get the correct data item for a viewholder in the position
      * **/

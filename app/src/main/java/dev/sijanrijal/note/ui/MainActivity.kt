@@ -3,6 +3,7 @@ package dev.sijanrijal.note.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.findNavController
 import dev.sijanrijal.note.R
 import dev.sijanrijal.note.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -16,4 +17,5 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
     }
+
 }
