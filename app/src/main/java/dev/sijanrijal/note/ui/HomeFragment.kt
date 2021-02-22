@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -22,33 +21,24 @@ import java.util.*
 class HomeFragment : Fragment() {
 
     private lateinit var viewModel: HomeFragmentViewModel
-
     private lateinit var binding: FragmentHomeBinding
-
-    private lateinit var userName: String
-
     private lateinit var adapter: NoteListAdapter
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_home, container, false
         )
 
+        topAppBarMenuItemClickListener()
+
         binding.lifecycleOwner = this
 
-        setHasOptionsMenu(true)
-
         viewModel = ViewModelProvider(this).get(HomeFragmentViewModel::class.java)
-
-        userName =
-            FirebaseAuth.getInstance().currentUser!!.displayName?.substringBefore(" ")
-                ?: " "
 
         // sets the click listener in recycler view so that if the user taps in a note, it will
         // take the user to Update Note Fragment so that the user can read/update the note
@@ -66,14 +56,12 @@ class HomeFragment : Fragment() {
         binding.notesRecyclerView.addItemDecoration(itemDecorator)
         addSwipeToDelete()
 
-
         //if there is an update to the database, update the recycler view as well
-        viewModel.isDatabaseChanged.observe(viewLifecycleOwner, Observer { isDatabaseChanged ->
+        viewModel.isDatabaseChanged.observe(viewLifecycleOwner, { isDatabaseChanged ->
             if (isDatabaseChanged) {
-                adapter.addHeaderAndNoteList(viewModel.notesList, userName)
+                adapter.addHeaderAndNoteList(viewModel.notesList, FirebaseAuth.getInstance().currentUser!!.displayName?.substringBefore(" ") ?: " ")
             }
         })
-
 
         // click listener to naviagate user to update note fragment to create a new note
         binding.fab.setOnClickListener {
@@ -86,35 +74,27 @@ class HomeFragment : Fragment() {
                 )
             )
         }
-
         return binding.root
     }
 
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.home_menu, menu)
-    }
-
-    /**
-     * Logs the user out of the application if the user selects logout from the menu
-     * **/
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.logout_menu -> {
-                logoutUser()
-                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToLoginFragment())
-                return true
+    private fun topAppBarMenuItemClickListener() {
+        binding.toolbar.setOnMenuItemClickListener { menuItem ->
+           when (menuItem.itemId) {
+                R.id.logout_menu -> {
+                    logoutUser()
+                    findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToLoginFragment())
+                    true
+                }
+               else -> false
             }
         }
-        return super.onOptionsItemSelected(item)
     }
-
 
     /**
      * Log the user out of the application
      * **/
     private fun logoutUser() {
+        Timber.d("Logging out user")
         FirebaseAuth.getInstance().signOut()
     }
 
