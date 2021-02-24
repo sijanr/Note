@@ -1,14 +1,12 @@
 package dev.sijanrijal.note
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import dev.sijanrijal.note.databinding.NotesListLayoutBinding
 import dev.sijanrijal.note.models.Note
-import kotlinx.android.synthetic.main.user_header.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,14 +24,12 @@ class NoteListAdapter(val noteClickListener: NoteClickListener) :
 
     private val adapterScope = CoroutineScope(Dispatchers.Main)
 
-
     /**
      * Create viewholders to display notes and header of the notes
      * **/
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             ITEM_NOTE -> NoteListViewHolder.from(parent)
-            ITEM_HEADER -> UserViewHolder.from(parent)
             else -> throw ClassCastException("Unknown viewtype $viewType")
         }
     }
@@ -43,7 +39,6 @@ class NoteListAdapter(val noteClickListener: NoteClickListener) :
      * **/
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
-            is DataItem.Header -> ITEM_HEADER
             is DataItem.NoteItem -> ITEM_NOTE
         }
     }
@@ -58,23 +53,15 @@ class NoteListAdapter(val noteClickListener: NoteClickListener) :
                 val note = getItem(position) as DataItem.NoteItem
                 holder.bind(noteClickListener, note.note)
             }
-            is UserViewHolder -> {
-                val userName = getItem(position) as DataItem.Header
-                holder.bind(userName.userName)
-
-            }
         }
     }
 
     /**
      * Adds the user name to be displayed as a header and list of notes
      * **/
-    fun addHeaderAndNoteList(list: List<Note>, username: String) {
+    fun addHeaderAndNoteList(list: List<Note>) {
         adapterScope.launch {
-            val items = when (list) {
-                emptyList<Note>() -> listOf(DataItem.Header(username))
-                else -> listOf(DataItem.Header(username)) + list.map { DataItem.NoteItem(it) }
-            }
+            val items = list.map { DataItem.NoteItem(it) }
             withContext(Dispatchers.Main) {
                 submitList(items)
             }
@@ -108,22 +95,6 @@ class NoteListAdapter(val noteClickListener: NoteClickListener) :
     }
 
 
-    /**
-     * ViewHolder class that holds the header for the recycler view
-     * **/
-    class UserViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(userName: String) {
-            view.header_title.text = "Here are your notes $userName"
-        }
-
-        companion object {
-            fun from(parent: ViewGroup): UserViewHolder {
-                val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.user_header, parent, false)
-                return UserViewHolder(view)
-            }
-        }
-    }
 }
 
 /**
@@ -156,9 +127,6 @@ sealed class DataItem {
         override val noteId = note.note_id
     }
 
-    data class Header(val userName: String) : DataItem() {
-        override val noteId: String = "0"
-    }
 
     abstract val noteId: String
 }

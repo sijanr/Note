@@ -1,5 +1,6 @@
 package dev.sijanrijal.note.ui
 
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
@@ -15,6 +16,8 @@ import dev.sijanrijal.note.NoteListAdapter
 import dev.sijanrijal.note.R
 import dev.sijanrijal.note.databinding.FragmentHomeBinding
 import dev.sijanrijal.note.viewmodels.HomeFragmentViewModel
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
 import timber.log.Timber
 import java.util.*
 
@@ -23,6 +26,23 @@ class HomeFragment : Fragment() {
     private lateinit var viewModel: HomeFragmentViewModel
     private lateinit var binding: FragmentHomeBinding
     private lateinit var adapter: NoteListAdapter
+
+    private val disposable = CompositeDisposable()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewModel = ViewModelProvider(this).get(HomeFragmentViewModel::class.java)
+
+        viewModel.observable.subscribe { itemCount ->
+            if (itemCount > 0) {
+                binding.fillerText.visibility = View.GONE
+            } else {
+                displayTextAndImageWhenListIsEmpty()
+            }
+        }
+            .addTo(disposable)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,8 +57,6 @@ class HomeFragment : Fragment() {
         topAppBarMenuItemClickListener()
 
         binding.lifecycleOwner = this
-
-        viewModel = ViewModelProvider(this).get(HomeFragmentViewModel::class.java)
 
         // sets the click listener in recycler view so that if the user taps in a note, it will
         // take the user to Update Note Fragment so that the user can read/update the note
@@ -58,7 +76,7 @@ class HomeFragment : Fragment() {
         //if there is an update to the database, update the recycler view as well
         viewModel.isDatabaseChanged.observe(viewLifecycleOwner, { isDatabaseChanged ->
             if (isDatabaseChanged) {
-                adapter.addHeaderAndNoteList(viewModel.notesList, FirebaseAuth.getInstance().currentUser!!.displayName?.substringBefore(" ") ?: " ")
+                adapter.addHeaderAndNoteList(viewModel.notesList)
             }
         })
 
@@ -75,6 +93,16 @@ class HomeFragment : Fragment() {
         }
         return binding.root
     }
+
+    private fun displayTextAndImageWhenListIsEmpty() {
+        binding.fillerText.text = getString(R.string.filler_string, FirebaseAuth.getInstance().currentUser?.displayName?.substringBefore(" ") ?: "")
+        binding.fillerText.visibility = View.VISIBLE
+        binding.fillerText.alpha = 0f
+        binding.fillerText.animate().alpha(1f).apply {
+            duration = 500
+        }.start()
+    }
+
 
     private fun topAppBarMenuItemClickListener() {
         binding.toolbar.setOnMenuItemClickListener { menuItem ->
@@ -113,13 +141,20 @@ class HomeFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                val note = viewModel.notesList[position - 1]
-                Timber.d("Note $note")
-                viewModel.deleteNote(note)
+                    val note = viewModel.notesList[position]
+                    Timber.d("Note $note")
+                    viewModel.deleteNote(note)
             }
+
+
 
         }
         val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
         itemTouchHelper.attachToRecyclerView(binding.notesRecyclerView)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
     }
 }

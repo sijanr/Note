@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import dev.sijanrijal.note.models.Note
+import io.reactivex.rxjava3.subjects.PublishSubject
 import timber.log.Timber
 
 class HomeFragmentViewModel : ViewModel() {
@@ -17,6 +18,11 @@ class HomeFragmentViewModel : ViewModel() {
     private val _isDatabaseChanged = MutableLiveData<Boolean>()
     val isDatabaseChanged: LiveData<Boolean>
         get() = _isDatabaseChanged
+
+    private val publishSubject = PublishSubject.create<Int>()
+
+    val observable
+        get() = publishSubject.hide()
 
     private var listener : ListenerRegistration
 
@@ -43,6 +49,7 @@ class HomeFragmentViewModel : ViewModel() {
                     Timber.d("Notes Added $element")
                 }
                 _isDatabaseChanged.value = true
+                publishSubject.onNext(notesList.size)
             }
 
     }
@@ -74,6 +81,7 @@ class HomeFragmentViewModel : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
+        publishSubject.onComplete()
         removeListener()
     }
 
