@@ -1,8 +1,13 @@
 package dev.sijanrijal.note.ui
 
 import android.animation.ObjectAnimator
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -20,6 +25,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import timber.log.Timber
 import java.util.*
+import kotlin.math.roundToInt
 
 class HomeFragment : Fragment() {
 
@@ -131,6 +137,8 @@ class HomeFragment : Fragment() {
             0,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
         ) {
+            private val backgroundColor = ColorDrawable(ContextCompat.getColor(context!!, R.color.color_delete))
+            private val deleteIcon = ContextCompat.getDrawable(context!!, R.drawable.delete_icon)!!
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -146,9 +154,56 @@ class HomeFragment : Fragment() {
                     viewModel.deleteNote(note)
             }
 
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
 
+                val itemView = viewHolder.itemView
+                val backgroundCornerOffset = 20
 
+                if (dX > 0) {
+                    backgroundColor.setBounds(itemView.left,
+                        itemView.top,
+                        itemView.left + dX.toInt() + backgroundCornerOffset,
+                        itemView.bottom)
+                    deleteIcon.setBounds(
+                        itemView.left+backgroundCornerOffset,
+                        itemView.top + 2*backgroundCornerOffset,
+                        itemView.right/6 + (backgroundCornerOffset/2),
+                        itemView.bottom - 2*backgroundCornerOffset
+                    )
+
+                } else if (dX < 0) {
+                    backgroundColor.setBounds(
+                        itemView.right + dX.toInt() - backgroundCornerOffset,
+                        itemView.top,
+                        itemView.right,
+                        itemView.bottom
+                    )
+                } else {
+                    backgroundColor.setBounds(0,0,0,0)
+                }
+                backgroundColor.draw(c)
+                deleteIcon.draw(c)
+            }
         }
+
+
         val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
         itemTouchHelper.attachToRecyclerView(binding.notesRecyclerView)
     }
