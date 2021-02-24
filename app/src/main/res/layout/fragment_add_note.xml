@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
+        android:id="@+id/card"
         android:layout_height="match_parent">
 
         <ScrollView
@@ -55,6 +56,6 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
             app:srcCompat="@drawable/ic_check" />
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </com.google.android.material.card.MaterialCardView>
 </layout>
 

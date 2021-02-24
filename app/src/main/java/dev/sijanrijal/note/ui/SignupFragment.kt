@@ -34,7 +34,7 @@ class SignupFragment : Fragment() {
         viewModel.isSignUpSuccessful.observe(viewLifecycleOwner,  { isSignUpSuccessful ->
             if (isSignUpSuccessful) {
                 makeToast("Signup successful. Verify your email before you login")
-                findNavController().navigate(SignupFragmentDirections.actionSignupFragmentToLoginFragment())
+                findNavController().navigateUp()
             } else if (!isSignUpSuccessful) {
                 binding.emailTextInput.error = viewModel.errorMessage
                 binding.passwordTextInput.error = viewModel.errorMessage

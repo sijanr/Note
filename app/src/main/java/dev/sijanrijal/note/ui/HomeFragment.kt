@@ -42,8 +42,7 @@ class HomeFragment : Fragment() {
 
         // sets the click listener in recycler view so that if the user taps in a note, it will
         // take the user to Update Note Fragment so that the user can read/update the note
-        adapter = NoteListAdapter(NoteClickListener { noteTitle, noteContent, date, noteId ->
-
+        adapter = NoteListAdapter(NoteClickListener { noteTitle, noteContent, date, noteId->
             findNavController().navigate(
                 HomeFragmentDirections.actionHomeFragmentToUpdateNoteFragment(
                     noteTitle, noteContent, date, noteId

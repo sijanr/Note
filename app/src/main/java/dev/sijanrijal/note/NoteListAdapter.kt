@@ -34,7 +34,7 @@ class NoteListAdapter(val noteClickListener: NoteClickListener) :
         return when (viewType) {
             ITEM_NOTE -> NoteListViewHolder.from(parent)
             ITEM_HEADER -> UserViewHolder.from(parent)
-            else -> throw ClassCastException("Unknow viewtype $viewType")
+            else -> throw ClassCastException("Unknown viewtype $viewType")
         }
     }
 
@@ -47,7 +47,6 @@ class NoteListAdapter(val noteClickListener: NoteClickListener) :
             is DataItem.NoteItem -> ITEM_NOTE
         }
     }
-
 
 
     /**
@@ -73,7 +72,7 @@ class NoteListAdapter(val noteClickListener: NoteClickListener) :
     fun addHeaderAndNoteList(list: List<Note>, username: String) {
         adapterScope.launch {
             val items = when (list) {
-                null -> listOf(DataItem.Header(username))
+                emptyList<Note>() -> listOf(DataItem.Header(username))
                 else -> listOf(DataItem.Header(username)) + list.map { DataItem.NoteItem(it) }
             }
             withContext(Dispatchers.Main) {
