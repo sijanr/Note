@@ -11,5 +11,5 @@
     <string name="create_account">Create\nan account</string>
     <string name="title">Title</string>
     <string name="start_writing">Start writing...</string>
-    <string name="shared_elements_item_text">shared_elements_item_text_%d</string>
+    <string name="filler_string">Go ahead %s,\nCreate some notes</string>
 </resources>

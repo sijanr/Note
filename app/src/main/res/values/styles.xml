@@ -47,8 +47,14 @@
         <item name="android:layout_marginTop">24dp</item>
     </style>
 
-    <style name="TextAppearance.NoteHeading.Text" parent="TextAppearance.MaterialComponents.Headline5">
+    <style name="TextAppearance.NoteHeading.Text" parent="TextAppearance.MaterialComponents.Headline4">
         <item name="fontFamily">@font/open_sans_semibold</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="TextAppearance.Note.FillerText" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="fontFamily">@font/overlock_black_italic</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="TextAppearance.NoteBody.Text" parent="TextAppearance.MaterialComponents.Subtitle1">
