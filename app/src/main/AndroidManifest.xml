@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="dev.sijanrijal.note">
 
+    <uses-feature android:name="android.hardware.screen.portrait" />
+
     <application
         android:name=".NoteApplication"
         android:allowBackup="true"
@@ -19,7 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".ui.MainActivity"
+            android:screenOrientation="portrait">
         </activity>
 
         <meta-data
