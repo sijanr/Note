@@ -9,6 +9,15 @@
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
     </style>
 
+    <style name="LauncherTheme" parent="AppTheme">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:windowAnimationStyle">@style/WindowAnimationStyle</item>
+    </style>
+
+    <style name="WindowAnimationStyle">
+        <item name="android:windowEnterAnimation">@android:anim/linear_interpolator</item>
+    </style>
     <style name="Widget.Note.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxBackgroundMode">outline</item>
         <item name="boxStrokeWidth">4dp</item>
@@ -20,11 +29,36 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">32dp</item>
         <item name="android:layout_marginEnd">32dp</item>
+        <item name="fontFamily">@font/open_sans</item>
         <item name="errorEnabled">true</item>
     </style>
 
     <style name="Widget.Note.Button" parent="Widget.MaterialComponents.Button">
-        <item name="backgroundTint">?attr/colorSecondary</item>
+        <item name="backgroundTint">@color/button_color_selector</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="fontFamily">@font/open_sans</item>
+    </style>
+
+    <style name="TextAppearance.LoginPageHeading.Text" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="fontFamily">@font/comfortaa_bold</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginStart">24dp</item>
+        <item name="android:layout_marginTop">24dp</item>
+    </style>
+
+    <style name="TextAppearance.NoteHeading.Text" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="fontFamily">@font/open_sans_semibold</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="TextAppearance.Note.FillerText" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="fontFamily">@font/overlock_black_italic</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="TextAppearance.NoteBody.Text" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="fontFamily">@font/open_sans</item>
     </style>
 
 

@@ -10,10 +10,12 @@ private const val PASSWORD_MIN_LENGTH = 10
 const val VERIFY_MESSAGE_ERROR = "Failed to verify email"
 
 //authentication error message
-const val AUTHENTICATION_ERROR = "Account creation failed"
+const val AUTHENTICATION_ERROR = "Failed to sign in"
+
+const val ACCOUNT_SIGNUP_FAIL = "Failed to create an account"
 
 //user's email or password validity error message
-const val VALIDITY_FAIL = "Enter a valid email and a 10 digit password"
+const val VALIDITY_FAIL = "Enter a valid email and a password that is at least 10 digits"
 
 const val CHECK_INBOX_VERIFICATION = "Check your inbox to verify your email"
 

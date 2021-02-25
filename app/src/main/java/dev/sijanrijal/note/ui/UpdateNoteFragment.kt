@@ -1,15 +1,20 @@
 package dev.sijanrijal.note.ui
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.transition.MaterialContainerTransform
 import dev.sijanrijal.note.R
 import dev.sijanrijal.note.databinding.FragmentAddNoteBinding
 import dev.sijanrijal.note.models.Note
@@ -25,7 +30,7 @@ class UpdateNoteFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAddNoteBinding.inflate(
             inflater, container, false
         )
@@ -82,4 +87,5 @@ class UpdateNoteFragment : Fragment() {
 
         return binding.root
     }
+
 }

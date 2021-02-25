@@ -1,16 +1,23 @@
 package dev.sijanrijal.note.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.SignInButton
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import dev.sijanrijal.note.CHECK_INBOX_VERIFICATION
+import dev.sijanrijal.note.R
 import dev.sijanrijal.note.databinding.FragmentLoginBinding
 import dev.sijanrijal.note.viewmodels.LoginFragmentViewModel
 import timber.log.Timber
@@ -18,23 +25,29 @@ import timber.log.Timber
 class LoginFragment : Fragment() {
 
 
+    companion object {
+        private const val RC_SIGN_IN = 1
+    }
     private lateinit var viewModel: LoginFragmentViewModel
     private lateinit var binding: FragmentLoginBinding
+    private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var auth: FirebaseAuth
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
 
+        Timber.d("Here at Login fragment")
+
         //get firebase authentication instance
-        val auth = FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
 
         viewModel = ViewModelProvider(this).get(LoginFragmentViewModel::class.java)
-
-        //checks if the authentication is successful
-        viewModel.setupFirebaseAuthListener()
 
         //navigate the user to the home screen if the user is a logged in user
         auth.currentUser?.let {
@@ -42,8 +55,16 @@ class LoginFragment : Fragment() {
             findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToHomeFragment())
         }
 
-        // navigate the user to the home fragment if login is successful and the user is a verified
-        // user or display an error message if there were any issues with authentication
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestProfile()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
+
+        binding.googleSignIn.setSize(SignInButton.SIZE_STANDARD)
+        googleSignInListener()
+
         binding.loginButton.setOnClickListener {
             viewModel.onLoginButtonClicked(
                 binding.emailTextInput.editText?.text.toString(),
@@ -51,9 +72,9 @@ class LoginFragment : Fragment() {
             )
         }
 
-        // if the authentication was successful, navigate the user to the first sign in fragment
-        // else to the home fragment
-        viewModel.isSignInSuccessful.observe(viewLifecycleOwner, Observer { isSignInSuccessful ->
+        // navigate the user to the home fragment if login is successful and the user is a verified
+        // user or display an error message if there were any issues with authentication
+        viewModel.isSignInSuccessful.observe(viewLifecycleOwner, { isSignInSuccessful ->
             if (isSignInSuccessful) {
                 if (viewModel.isNewUser) {
                     findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToFirstSignInFragment())
@@ -61,12 +82,10 @@ class LoginFragment : Fragment() {
                     findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToHomeFragment())
                 }
             } else {
-                if (viewModel.errorMessage.equals(CHECK_INBOX_VERIFICATION)) {
-                    binding.emailTextInput.error = null
-                    binding.passwordTextInput.error = null
+                if (viewModel.errorMessage == CHECK_INBOX_VERIFICATION) {
+                    displayErrorMessage(null)
                 } else {
-                    binding.emailTextInput.error = viewModel.errorMessage
-                    binding.passwordTextInput.error = viewModel.errorMessage
+                    displayErrorMessage(viewModel.errorMessage)
                 }
             }
         })
@@ -79,14 +98,47 @@ class LoginFragment : Fragment() {
         return binding.root
     }
 
-
-    override fun onStart() {
-        super.onStart()
-        FirebaseAuth.getInstance().addAuthStateListener(viewModel.mAuthListener)
+    private fun googleSignInListener() {
+        binding.googleSignIn.setOnClickListener {
+            val signinIntent = googleSignInClient.signInIntent
+            startActivityForResult(signinIntent, RC_SIGN_IN)
+        }
     }
 
-    override fun onStop() {
-        super.onStop()
-        FirebaseAuth.getInstance().removeAuthStateListener(viewModel.mAuthListener)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                firebaseAuthWithGoogle(account!!.idToken!!)
+            } catch (e : ApiException) {
+                Toast.makeText(requireContext(), "Failed to sign in", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
+
+    private fun displayErrorMessage(errorMessage: String?) {
+        errorMessage?.let { message ->
+            binding.emailTextInput.error = message
+            binding.passwordTextInput.error = message
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(requireActivity()) { task ->
+                if (task.isSuccessful) {
+                    val user = auth.currentUser
+                    if (user!!.metadata!!.lastSignInTimestamp == user.metadata!!.creationTimestamp) {
+                        findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToFirstSignInFragment())
+                    } else {
+                        findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToHomeFragment())
+                    }
+                }
+            }
+    }
+
 }

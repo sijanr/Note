@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Platform.V21.Widget.LoginPageHeading.Text" parent="TextAppearance.LoginPageHeading.Text">
+        <item name="android:letterSpacing">0.1</item>
+    </style>
+</resources>

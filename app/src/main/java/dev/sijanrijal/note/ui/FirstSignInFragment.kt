@@ -21,10 +21,14 @@ class FirstSignInFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentFirstSignInBinding.inflate(
             inflater, container, false
         )
+
+        if (FirebaseAuth.getInstance().currentUser!!.displayName != null) {
+            findNavController().navigate(FirstSignInFragmentDirections.actionFirstSignInFragmentToHomeFragment())
+        }
 
         // checks the validity of first and last name and if it passes, it adds the user to the
         // firestore database and navigates the user to the home fragment

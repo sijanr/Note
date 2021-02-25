@@ -11,7 +11,9 @@
             android:id="@+id/action_homeFragment_to_updateNoteFragment"
             app:destination="@id/updateNoteFragment"
             app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out">
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
             <argument android:name="noteTitle" />
             <argument android:name="description" />
         </action>
@@ -40,7 +42,9 @@
             android:id="@+id/action_loginFragment_to_signupFragment2"
             app:destination="@id/signupFragment"
             app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left" />
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_loginFragment_to_firstSignInFragment"
             app:destination="@id/firstSignInFragment"
@@ -54,14 +58,7 @@
     <fragment
         android:id="@+id/signupFragment"
         android:name="dev.sijanrijal.note.ui.SignupFragment"
-        android:label="SignupFragment" >
-        <action
-            android:id="@+id/action_signupFragment_to_loginFragment"
-            app:destination="@id/loginFragment"
-            app:enterAnim="@anim/slide_in_left"
-            app:exitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/loginFragment" />
-    </fragment>
+        android:label="SignupFragment" />
     <fragment
         android:id="@+id/firstSignInFragment"
         android:name="dev.sijanrijal.note.ui.FirstSignInFragment"
