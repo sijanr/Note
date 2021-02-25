@@ -1,5 +1,6 @@
 package dev.sijanrijal.note.ui
 
+import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.graphics.Canvas
 import android.graphics.Color
@@ -40,8 +41,10 @@ class HomeFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(HomeFragmentViewModel::class.java)
 
+        //subscribe to be notified of the change in the note list
         viewModel.observable.subscribe { itemCount ->
             if (itemCount > 0) {
+                binding.noteAnimation.visibility = View.GONE
                 binding.fillerText.visibility = View.GONE
             } else {
                 displayTextAndImageWhenListIsEmpty()
@@ -100,17 +103,22 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    //show the animation when the note list is empty
     private fun displayTextAndImageWhenListIsEmpty() {
         binding.fillerText.text = getString(R.string.filler_string, FirebaseAuth.getInstance().currentUser?.displayName?.substringBefore(" ") ?: "")
         binding.fillerText.visibility = View.VISIBLE
         binding.fillerText.alpha = 0f
         binding.fillerText.animate().alpha(1f).apply {
             duration = 500
-        }.start()
+        }.setStartDelay(1).start()
+        binding.noteAnimation.visibility = View.VISIBLE
+        binding.noteAnimation.playAnimation()
     }
 
 
+    //click listener for menu item in toolbar
     private fun topAppBarMenuItemClickListener() {
+        binding.toolbar.overflowIcon = resources.getDrawable(R.drawable.ic_menu)
         binding.toolbar.setOnMenuItemClickListener { menuItem ->
            when (menuItem.itemId) {
                 R.id.logout_menu -> {
@@ -176,38 +184,42 @@ class HomeFragment : Fragment() {
                 val itemView = viewHolder.itemView
                 val backgroundCornerOffset = 20
 
-                if (dX > 0) {
-                    backgroundColor.setBounds(itemView.left,
-                        itemView.top,
-                        itemView.left + dX.toInt() + backgroundCornerOffset,
-                        itemView.bottom)
-                    deleteIcon.setBounds(
-                        itemView.left+backgroundCornerOffset,
-                        itemView.top + 2*backgroundCornerOffset,
-                        itemView.right/6 + (backgroundCornerOffset/2),
-                        itemView.bottom - 2*backgroundCornerOffset
-                    )
+                when  {
+                    dX > 0 -> {
+                        backgroundColor.setBounds(itemView.left,
+                            itemView.top,
+                            itemView.left + dX.toInt() + backgroundCornerOffset,
+                            itemView.bottom)
+                        deleteIcon.setBounds(
+                            itemView.left+backgroundCornerOffset,
+                            itemView.top + 2*backgroundCornerOffset,
+                            itemView.right/6 + (backgroundCornerOffset/2),
+                            itemView.bottom - 2*backgroundCornerOffset
+                        )
 
-                } else if (dX < 0) {
-                    backgroundColor.setBounds(
-                        itemView.right + dX.toInt() - backgroundCornerOffset,
-                        itemView.top,
-                        itemView.right,
-                        itemView.bottom
-                    )
-                } else {
-                    backgroundColor.setBounds(0,0,0,0)
+                    }
+                    dX < 0 -> {
+                        backgroundColor.setBounds(
+                            itemView.right + dX.toInt() - backgroundCornerOffset,
+                            itemView.top,
+                            itemView.right,
+                            itemView.bottom
+                        )
+                    }
+                    else -> {
+                        backgroundColor.setBounds(0,0,0,0)
+                    }
                 }
                 backgroundColor.draw(c)
                 deleteIcon.draw(c)
             }
         }
 
-
         val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
         itemTouchHelper.attachToRecyclerView(binding.notesRecyclerView)
     }
 
+    //dispose the subscription
     override fun onDestroy() {
         super.onDestroy()
         disposable.dispose()
