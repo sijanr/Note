@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.MetadataChanges
 import dev.sijanrijal.note.models.Note
 import dev.sijanrijal.note.toString
 import timber.log.Timber
@@ -23,6 +24,7 @@ class UpdateFragmentViewModel : ViewModel() {
      * **/
     fun addNote(note: Note) {
         note.note_id = databaseRef.document().id
+        checkFromCache(note.note_id)
         databaseRef.document(note.note_id)
             .set(note)
             .addOnSuccessListener {
@@ -32,6 +34,20 @@ class UpdateFragmentViewModel : ViewModel() {
             .addOnFailureListener {
                 Timber.d("Failed to add notes $it")
                 _isSuccessful.value = false
+            }
+    }
+
+    //check if there are any local changes
+    private fun checkFromCache(noteId: String) {
+        databaseRef.document(noteId)
+            .addSnapshotListener(MetadataChanges.INCLUDE) { querySnapshot, e ->
+                if (e != null) {
+                    return@addSnapshotListener
+                }
+
+                if (querySnapshot!!.metadata.isFromCache) {
+                    _isSuccessful.value = true
+                }
             }
     }
 
@@ -61,6 +77,7 @@ class UpdateFragmentViewModel : ViewModel() {
                 .addOnSuccessListener {
                     _isSuccessful.value = true
                 }
+            checkFromCache(noteId)
         }
     }
 
